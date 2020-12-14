@@ -13,7 +13,9 @@ jobs:
       METABASE_PASSWORD: ${{ secrets.METABASE_PASSWORD }}
     steps:
       - uses: actions/checkout@v2
-      - name: Install Dependencies
+      - name: Install GObject-Introspection
+        run: apt install libgirepository1.0-dev
+      - name: Install Dev Dependencies
         uses: VaultVulp/action-pipenv@v2.0.1
         with:
           command: install --dev
