@@ -13,9 +13,11 @@ jobs:
       METABASE_PASSWORD: ${{ secrets.METABASE_PASSWORD }}
     steps:
       - uses: actions/checkout@v2
-      - name: Install Pipenv
-        run: pip install pipenv
       - name: Build Documentation
-        run: pipenv run doc
+        uses: VaultVulp/action-pipenv@v2.0.1
+        with:
+          command: run doc
       - name: Upload Documentation
-        run: pipenv run sphinx-build docs/source/ docs/build/html/ -b metabase -E
+        uses: VaultVulp/action-pipenv@v2.0.1
+        with:
+          command: pipenv run sphinx-build docs/source/ docs/build/html/ -b metabase -E
