@@ -1,0 +1,19 @@
+name: Azafea Documentation
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  upload:
+    env:
+      METABASE_USERNAME: ${{ secrets.METABASE_USERNAME }}
+      METABASE_PASSWORD: ${{ secrets.METABASE_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Pipenv
+        run: pip install pipenv
+      - name: Build Documentation
+        run: pipenv run doc
+      - name: Upload Documentation
+        run: pipenv run sphinx-build docs/source/ docs/build/html/ -b metabase -E
