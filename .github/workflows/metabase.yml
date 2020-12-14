@@ -15,11 +15,9 @@ jobs:
       - uses: actions/checkout@v2
       - name: Install GObject-Introspection
         run: sudo apt install libgirepository1.0-dev
+      - name: Install Pipenv
+        run: sudo pip3 install pipenv
       - name: Install Dev Dependencies
-        uses: VaultVulp/action-pipenv@v2.0.1
-        with:
-          command: install --dev
+        run: pipenv install --dev
       - name: Upload Documentation
-        uses: VaultVulp/action-pipenv@v2.0.1
-        with:
-          command: run sphinx-build docs/source/ docs/build/html/ -b metabase -E
+        command: pipenv run sphinx-build docs/source/ docs/build/html/ -b metabase -E
