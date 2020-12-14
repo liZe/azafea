@@ -1,0 +1,31 @@
+name: Azafea
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Docker Image
+        run: docker build --tag azafea-tests .
+      - name: Install Docker Images
+        run: |
+          docker run -d --name=redis --network=host redis:5-alpine --requirepass 'CHANGE ME!!'
+          docker run -d --name=postgres --network=host -e 'POSTGRES_PASSWORD=CHANGE ME!!' -e 'POSTGRES_USER=azafea' -e 'POSTGRES_DB=azafea-tests' postgres:11-alpine
+      - name: Run Tests
+        run: docker run --rm --network=host --entrypoint="" azafea-tests pipenv run test-all
+      - name: Remove Docker Images
+        run: docker rm -f redis postgres
+  lint:
+    name: Lint and Type Checking
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Docker Image
+        run: docker build --tag azafea-tests .
+      - name: Lint and Type Checking
+        run: docker run --rm --network=host --entrypoint="" azafea-tests pipenv run lint
