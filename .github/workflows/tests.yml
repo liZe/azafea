@@ -13,11 +13,13 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build Docker Image
         run: docker build --tag azafea-tests .
+      - name: Save Docker Image
+        run: docker save azafea-tests > docker-image.tar
       - name: Upload Artifact
         uses: actions/upload-artifact@v2
         with:
           name: image
-          path: /var/lib/docker
+          path: docker-image.tar
   tests:
     name: Integration Tests
     needs: build
@@ -27,7 +29,9 @@ jobs:
       - name: Get Docker Image
         uses: actions/download-artifact@v2
         with:
-          path: image
+          name: image
+      - name: Load Docker Image
+        run: docker load < docker-image.tar
       - name: Install Docker Images
         run: |
           docker run -d --name=redis --network=host redis:5-alpine --requirepass 'CHANGE ME!!'
@@ -45,6 +49,8 @@ jobs:
       - name: Get Docker Image
         uses: actions/download-artifact@v2
         with:
-          path: image
+          name: image
+      - name: Load Docker Image
+        run: docker load < docker-image.tar
       - name: Lint and Type Checking
         run: docker run --rm --network=host --entrypoint="" azafea-tests pipenv run lint
