@@ -13,10 +13,10 @@ jobs:
       METABASE_PASSWORD: ${{ secrets.METABASE_PASSWORD }}
     steps:
       - uses: actions/checkout@v2
-      - name: Build Documentation
+      - name: Install Dependencies
         uses: VaultVulp/action-pipenv@v2.0.1
         with:
-          command: run doc
+          command: install --dev
       - name: Upload Documentation
         uses: VaultVulp/action-pipenv@v2.0.1
         with:
