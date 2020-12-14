@@ -1,11 +1,13 @@
-name: Azafea Documentation
+name: Azafea Metabase Documentation
 on:
   push:
     branches:
       - master
 
 jobs:
-  upload:
+  metabase:
+    name: Update Documentation on Metabase
+    runs-on: ubuntu-latest
     env:
       METABASE_USERNAME: ${{ secrets.METABASE_USERNAME }}
       METABASE_PASSWORD: ${{ secrets.METABASE_PASSWORD }}
