@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Install GObject-Introspection
-        run: apt install libgirepository1.0-dev
+        run: sudo apt install libgirepository1.0-dev
       - name: Install Dev Dependencies
         uses: VaultVulp/action-pipenv@v2.0.1
         with:
