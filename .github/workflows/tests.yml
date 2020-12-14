@@ -6,13 +6,28 @@ on:
   pull_request:
 
 jobs:
-  tests:
-    name: Integration Tests
+  build:
+    name: Build Docker Image
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Build Docker Image
         run: docker build --tag azafea-tests .
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: image
+          path: /var/lib/docker
+  tests:
+    name: Integration Tests
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get Docker Image
+        uses: actions/download-artifact@v2
+        with:
+          path: image
       - name: Install Docker Images
         run: |
           docker run -d --name=redis --network=host redis:5-alpine --requirepass 'CHANGE ME!!'
@@ -23,10 +38,13 @@ jobs:
         run: docker rm -f redis postgres
   lint:
     name: Lint and Type Checking
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Build Docker Image
-        run: docker build --tag azafea-tests .
+      - name: Get Docker Image
+        uses: actions/download-artifact@v2
+        with:
+          path: image
       - name: Lint and Type Checking
         run: docker run --rm --network=host --entrypoint="" azafea-tests pipenv run lint
