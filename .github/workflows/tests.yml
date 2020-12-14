@@ -23,6 +23,7 @@ jobs:
         run: docker rm -f redis postgres
   lint:
     name: Lint and Type Checking
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Build Docker Image
