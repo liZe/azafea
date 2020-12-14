@@ -20,4 +20,4 @@ jobs:
       - name: Upload Documentation
         uses: VaultVulp/action-pipenv@v2.0.1
         with:
-          command: pipenv run sphinx-build docs/source/ docs/build/html/ -b metabase -E
+          command: run sphinx-build docs/source/ docs/build/html/ -b metabase -E
